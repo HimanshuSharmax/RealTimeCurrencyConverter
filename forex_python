@@ -1,0 +1,148 @@
+from forex_python.converter import CurrencyRates
+from datetime import date
+from tkinter import *
+import tkinter.messagebox
+from PIL import ImageTk, Image
+
+root = tkinter.Tk()
+
+root.title("REAL TIME CURRENCY CONVERTER")
+
+root.geometry("800x650")
+
+photo = Image.open(r"E:\Semester 7\Project\banknote.jpg")
+new_image= photo.resize((800,650), Image.ANTIALIAS)
+photo2=ImageTk.PhotoImage(new_image)
+img_label = Label(root, image=photo2)
+img_label.pack()
+
+ip1 = StringVar(root)       
+ip2 = StringVar(root)
+
+ip1.set("Select")
+ip2.set("Select")
+
+def RealTimeCurrencyConversion():
+    c = CurrencyRates()
+
+    from_currency = ip1.get()
+    to_currency = ip2.get()
+
+    if (value.get() == ""):
+        tkinter.messagebox.showerror("Error", "Amount Not Entered.\n Please a valid amount.")
+
+    elif (from_currency == "Select" or to_currency == "Select"):
+        tkinter.messagebox.showerror("Error", "Currency Not Selected.\n Please select the currencies to be converted")
+
+    else:
+        new_amt = c.convert(from_currency, to_currency, float(value.get()))
+        new_amount = float("{:.4f}".format(new_amt))
+        output.insert(0, str(new_amount))
+
+def OldCurrencyRates():
+    d = CurrencyRates()
+
+    from_currency = ip1.get()
+    to_currency = ip2.get()
+    if (value.get() == ""):
+        tkinter.messagebox.showerror("Error", "Amount Not Entered.\n Please a valid amount.")
+
+    elif(from_currency == "Select" or to_currency == "Select"):
+        tkinter.messagebox.showerror("Error", "Currency Not Selected.\n Please select the currencies to be converted")
+
+    elif (dt.get() == "" or mth.get() == "" or yr.get() == ""):
+        tkinter.messagebox.showerror("Error", "\n Please  Enter a valid Date.")
+
+    day = int(dt.get())
+    month = int(mth.get())
+    year = int(yr.get())
+    date1 = date(year, month, day)
+
+
+
+    new_amt = d.convert(from_currency, to_currency, float(value.get()),date1)
+    #new_amt = d.get_rate(from_currency, to_currency,float(value.get()), date1)
+    new_amount = float("{:.4f}".format(new_amt))
+    output2.insert(0, str(new_amount))
+
+
+def clear():
+    value.delete(0, END)
+    dt.delete(0,END)
+    mth.delete(0, END)
+    yr.delete(0, END)
+    output.delete(0, END)
+    output2.delete(0,END)
+    ip1.set("Select")
+    ip2.set("Select")
+
+
+CurrencyCode_list = ["INR", "USD", "CAD", "CNY", "DKK", "EUR", "GBP", "IDR", "JPY", "BGN", "ILS", "HUF", "RON", "MYR",
+                     "SEK", "SGD", "HKD", "AUD", "CHF", "KRW", "CNY", "TRY", "HRK", "NZD", "THB", "NOK", "RUB", "MXN",
+                     "CZK", "BRL", "PLN", "PHP", "ZAR"]
+
+label1 = Label(root, font=('Helvetica', 15, 'bold'), text="Enter Amount:", fg="white",bg="Blue")
+label1.place(x=120, y=50)
+
+label2 = Label(root, font=('Helvetica', 15, 'bold'), text="From Currency:", fg="white",bg="Blue")
+label2.place(x=120, y=100)
+
+label3 = Label(root, font=('Helvetica', 15, 'bold'), text="To Currency:", fg="white",bg="Blue")
+label3.place(x=120, y=150)
+
+label4 = Label(root, font=('Helvetica', 15, 'bold'), text="Live Rate :", bg="Yellow",fg="black")
+label4.place(x=420, y=245)
+
+label5 = Label(root, font=('Helvetica', 15, 'bold'), text="Enter date:", fg="white",bg="Blue")
+label5.place(x=110, y=390)
+
+label6 = Label(root, font=('Helvetica', 15, 'bold'), text="Enter Month:", fg="white",bg="Blue")
+label6.place(x=110, y=440)
+
+label7 = Label(root, font=('Helvetica', 15, 'bold'), text="Enter Year:", fg="white",bg="Blue")
+label7.place(x=110, y=490)
+
+label8 = Label(root, font=('Helvetica', 15, 'bold'), text="To Get Previous Rates ",bg="black",fg="red")
+label8.place(x=290, y=320)
+
+label9 = Label(root, font=('Helvetica', 15, 'bold'), text="Converted Rate :", bg="Yellow",fg="black")
+label9.place(x=390, y=565)
+
+FromCurrency_option = OptionMenu(root, ip1, *CurrencyCode_list)
+ToCurrency_option = OptionMenu(root, ip2, *CurrencyCode_list)
+
+FromCurrency_option.place(x=300, y=105)
+ToCurrency_option.place(x=300, y=155)
+
+
+value = Entry(root)
+value.place(x=300, y=55)
+
+
+dt = Entry(root)
+dt.place(x=300, y=395)
+
+mth = Entry(root)
+mth.place(x=300, y=445)
+
+yr = Entry(root)
+yr.place(x=300, y=495)
+
+output = Entry(root)
+output.place(x=550, y=250)
+
+output2 = Entry(root)
+output2.place(x=570, y=570)
+
+convert = Button(root, font=('arial', 15, 'bold'), text="Real Time Rate", padx=2, pady=2, bg="green", fg="black",
+                 command=RealTimeCurrencyConversion)
+convert.place(x=170, y=240)
+
+get_rates = Button(root, font=('arial', 15, 'bold'), text="Previous Rate", padx=2, pady=2, bg="green", fg="black",
+                 command=OldCurrencyRates)
+get_rates.place(x=190, y=557)  
+
+reset = Button(root, font=('arial', 15, 'bold'), text="Reset", padx=1, pady=1, bg="red", fg="white", command=clear)
+reset.place(x=500, y=100)
+
+root.mainloop()
